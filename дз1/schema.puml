@@ -1,0 +1,82 @@
+@startuml OnlineShopERD
+
+entity Products {
+  * id : integer <<generated>> <<PK>>
+  * name : varchar(100) <<not null>>
+  * description : text
+  * price : decimal(10,2) <<not null>>
+  * stock_quantity : integer <<not null>>
+  * image_url : varchar(255)
+  * created_at : timestamp <<default now()>>
+  * updated_at : timestamp
+}
+
+entity Users {
+  * id : integer <<generated>> <<PK>>
+  * username : varchar(50) <<unique>> <<not null>>
+  * email : varchar(100) <<unique>> <<not null>>
+  * password_hash : varchar(255) <<not null>>
+  * first_name : varchar(50)
+  * last_name : varchar(50)
+  * phone : varchar(20)
+  * address : text
+  * registration_date : timestamp <<default now()>>
+}
+
+entity Categories {
+  * id : integer <<generated>> <<PK>>
+  * name : varchar(50) <<not null>>
+  * description : text
+  * parent_id : integer <<FK>>
+  * image_url : varchar(255)
+}
+
+entity Orders {
+  * id : integer <<generated>> <<PK>>
+  * order_number : varchar(20) <<unique>> <<not null>>
+  * status : varchar(20) <<not null>>
+  * total_amount : decimal(10,2) <<not null>>
+  * shipping_address : text <<not null>>
+  * payment_method : varchar(50)
+  * created_at : timestamp <<default now()>>
+}
+
+entity OrderItems {
+  * id : integer <<generated>> <<PK>>
+  * quantity : integer <<not null>>
+  * price : decimal(10,2) <<not null>>
+}
+
+entity Cart {
+  * id : integer <<generated>> <<PK>>
+  * created_at : timestamp <<default now()>>
+  * updated_at : timestamp
+}
+
+entity CartItems {
+  * id : integer <<generated>> <<PK>>
+  * quantity : integer <<not null>>
+  * added_at : timestamp <<default now()>>
+}
+
+entity Favorites {
+  * id : integer <<generated>> <<PK>>
+  * added_at : timestamp <<default now()>>
+}
+
+' Связи между сущностями
+Categories ||--o{ Products : "contains"
+Categories ||--o{ Categories : "parent-child"
+
+Users ||--o{ Orders : "places"
+Orders ||--o{ OrderItems : "contains"
+Products ||--o{ OrderItems : "included in"
+
+Users ||--o| Cart : "has"
+Cart ||--o{ CartItems : "contains"
+Products ||--o{ CartItems : "added to"
+
+Users ||--o{ Favorites : "has"
+Products ||--o{ Favorites : "marked as"
+
+@enduml
