@@ -1,5 +1,5 @@
 # Этап сборки
-FROM openjdk:23-jdk-slim AS build
+FROM eclipse-temurin:24-jdk-alpine AS build
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN chmod +x gradlew
 RUN ./gradlew build -x test
 
 # Этап выполнения
-FROM openjdk:23-jdk-slim
+FROM eclipse-temurin:24-jre-alpine
 
 WORKDIR /app
 
