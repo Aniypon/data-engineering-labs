@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra-hw10
+    ports:
+      - "9042:9042"
+    volumes:
+      - ./cassandra_schema.cql:/schema.cql
+      - ./queries.cql:/queries.cql
+    environment:
+      - CASSANDRA_CLUSTER_NAME=marketplace_cluster
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=128M
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 15s
+      timeout: 10s
+      retries: 10 
